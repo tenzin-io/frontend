@@ -1,0 +1,47 @@
+---
+version: '3'
+services:
+
+#
+# dynamic dns updater
+#
+  ddns_client:
+    env_file:
+      - cloudflare.env
+    environment:
+      - 'FRONTEND_DNS=frontend.tenzin.io'
+      - 'ZONE_ID=9ecfde9fa74a335d19acac64cd9c98b4'
+      - 'RECORD_ID=23f3e6572401a719aa890d7352666b06'
+    build:
+      context: ./build-ddns_client 
+
+#
+# mkcert
+#
+  mkcert:
+    build:
+      context: ./build-mkcert
+    environment:
+      - 'CAROOT=/certs.d'
+      - 'CERT_HOSTNAME=frontend'
+      - 'CERT_DOMAIN=tenzin.io'
+    volumes:
+      - certs_data:/certs.d/
+
+#
+# frontend proxy
+#
+  nginx:
+    image: arm64v8/nginx:mainline
+    volumes:
+      - certs_data:/etc/nginx/certs.d/
+      - nginx_config:/etc/nginx/conf.d/
+    restart: always
+    ports:
+      - 443:443
+    depends_on:
+      - mkcert
+
+volumes:
+  certs_data:
+  nginx_config:
