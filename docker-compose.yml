@@ -32,10 +32,10 @@ services:
 # frontend proxy
 #
   nginx:
-    image: arm64v8/nginx:mainline
+    build: 
+      context: ./build-nginx
     volumes:
       - certs_data:/etc/nginx/certs.d/
-      - nginx_config:/etc/nginx/conf.d/
     restart: always
     ports:
       - 443:443
@@ -44,4 +44,3 @@ services:
 
 volumes:
   certs_data:
-  nginx_config:
