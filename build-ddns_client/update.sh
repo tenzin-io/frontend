@@ -7,7 +7,7 @@ while true
 do
 
 # Get my IP address
-MY_IP=$(curl -s  http://checkip.dyndns.org/ | html2text | cut -d: -f2 | xargs -n1)
+MY_IP=$(curl -s http://checkip.amazonaws.com)
 
 # Update my IP address
 cat <<EOF | curl -X PUT "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records/${RECORD_ID}" \
