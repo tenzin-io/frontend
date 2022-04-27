@@ -1,0 +1,37 @@
+#!/usr/bin/ansible-playbook
+---
+- name: Setup Docker host
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  vars:
+    cloudflare_zone: "{{ lookup('env', 'CLOUDFLARE_ZONE') }}"
+    cloudflare_record: "{{ lookup('env', 'CLOUDFLARE_RECORD') }}"
+    cloudflare_key: "{{ lookup('env', 'CLOUDFLARE_KEY') }}"
+  tasks:
+    - name: Get my IP address
+      uri:
+        url:  http://checkip.amazonaws.com
+        method: GET
+        return_content: yes
+      register: response 
+
+    - name: Set my IP address fact
+      set_fact:
+        my_ipaddr: '{{ response.content | trim }}'
+
+    - name: Write my IP address {{ my_ipaddr }} to file
+      copy:
+        content: '{{ my_ipaddr }}'
+        dest: /my_ipaddr
+      register: my_ipaddr_file
+
+    - name: Update DNS record {{ cloudflare_record }}.{{ cloudflare_zone }} with {{ my_ipaddr }}
+      community.general.cloudflare_dns:
+        zone: '{{ cloudflare_zone }}'
+        record: '{{ cloudflare_record }}'
+        type: A
+        value: '{{ my_ipaddr }}'
+        api_token: '{{ cloudflare_key }}'
+      when: my_ipaddr_file.changed
+

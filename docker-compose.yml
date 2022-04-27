@@ -9,9 +9,9 @@ services:
     env_file:
       - cloudflare.env
     environment:
-      - 'FRONTEND_DNS=frontend.tenzin.io'
-      - 'ZONE_ID=9ecfde9fa74a335d19acac64cd9c98b4'
-      - 'RECORD_ID=23f3e6572401a719aa890d7352666b06'
+      - 'POLL=5'
+      - 'CLOUDFLARE_RECORD=frontend'
+      - 'CLOUDFLARE_ZONE=tenzin.io'
     build:
       context: ./build-ddns_client 
 
