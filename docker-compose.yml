@@ -22,7 +22,6 @@ services:
     build:
       context: ./build-mkcert
     environment:
-      - 'CAROOT=/certs.d'
       - 'CERT_HOSTNAME=frontend'
       - 'CERT_DOMAIN=tenzin.io'
     volumes:
