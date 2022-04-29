@@ -8,6 +8,7 @@
     cloudflare_zone: "{{ lookup('env', 'CLOUDFLARE_ZONE') }}"
     cloudflare_record: "{{ lookup('env', 'CLOUDFLARE_RECORD') }}"
     cloudflare_key: "{{ lookup('env', 'CLOUDFLARE_KEY') }}"
+    discord_webhook_url: "{{ lookup('env', 'DISCORD_WEBHOOK_URL') }}"
   tasks:
     - name: Get my IP address
       uri:
@@ -35,3 +36,12 @@
         api_token: '{{ cloudflare_key }}'
       when: my_ipaddr_file.changed
 
+    - name: Post the updated my_ipaddr to Discord channel
+      uri:
+        url:  '{{ discord_webhook_url }}'
+        method: POST
+        body:
+          content: 'Frontend public IP changed to {{ my_ipaddr }}'
+        body_format: json
+        status_code: 204
+      when: my_ipaddr_file.changed

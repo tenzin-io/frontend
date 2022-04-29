@@ -7,7 +7,7 @@ services:
 #
   ddns_client:
     env_file:
-      - cloudflare.env
+      - auth.env
     environment:
       - 'POLL=5'
       - 'CLOUDFLARE_RECORD=frontend'
