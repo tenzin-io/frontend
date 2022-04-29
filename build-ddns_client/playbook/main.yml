@@ -1,6 +1,6 @@
 #!/usr/bin/ansible-playbook
 ---
-- name: Setup Docker host
+- name: DNS updater playbook
   hosts: localhost
   connection: local
   gather_facts: yes
