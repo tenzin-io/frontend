@@ -9,7 +9,7 @@ services:
     env_file:
       - auth.env
     environment:
-      - 'POLL=5'
+      - 'POLL=30'
       - 'CLOUDFLARE_RECORD=frontend'
       - 'CLOUDFLARE_ZONE=tenzin.io'
     build:
